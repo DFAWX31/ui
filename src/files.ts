@@ -5,8 +5,8 @@ const walk = (
     pathLike: fs.PathLike,
     options?:
         | {
-              encoding: BufferEncoding | null;
-          }
+            encoding: BufferEncoding | null;
+        }
         | BufferEncoding
         | null
         | undefined
@@ -16,14 +16,16 @@ const walk = (
     for (let i = 0; i < fileList.length; i += 1) {
         const file = fileList[i];
         const stat = fs.statSync(path.join(pathLike.toString(), file));
+
         results = [
             ...results,
             ...(stat && stat.isDirectory()
                 ? walk(path.join(pathLike.toString(), file))
-                : [file]),
+                : [path.join(pathLike.toString(), file)])
         ];
     }
-    return results.map((filename) => path.join(pathLike.toString(), filename));
+
+    return results;
 };
 
 const commandFiles = walk(path.join(__dirname, "commands")).filter((file) =>

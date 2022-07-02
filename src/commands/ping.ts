@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { BaseCommandInteraction, CacheType, MessageEmbed } from "discord.js";
+import { CacheType, CommandInteraction, MessageEmbed } from "discord.js";
 import { BotCommand } from "../structures";
 
 class Ping extends BotCommand {
@@ -14,7 +14,7 @@ class Ping extends BotCommand {
     }
 
     public async execute(
-        interaction: BaseCommandInteraction<CacheType>
+        interaction: CommandInteraction<CacheType>
     ): Promise<void> {
         const embed = new MessageEmbed()
             .setTitle("Pong 🏓")
