@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Members {
+  guildId       String
+  userId        String 
+  numberOfWarns Int
+  Warns         Warns[]
+  @@id([guildId, userId])
+}
+
+model Warns {
+  id      Int     @id @default(autoincrement())
+  member  String
+  user    Members @relation(fields: [member, guildId], references: [userId, guildId])
+  reason  String
+  guildId String
+  time DateTime @default(now())
+}

@@ -5,8 +5,8 @@ const walk = (
     pathLike: fs.PathLike,
     options?:
         | {
-            encoding: BufferEncoding | null;
-        }
+              encoding: BufferEncoding | null;
+          }
         | BufferEncoding
         | null
         | undefined
@@ -21,7 +21,7 @@ const walk = (
             ...results,
             ...(stat && stat.isDirectory()
                 ? walk(path.join(pathLike.toString(), file))
-                : [path.join(pathLike.toString(), file)])
+                : [path.join(pathLike.toString(), file)]),
         ];
     }
 
