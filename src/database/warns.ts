@@ -11,7 +11,7 @@ export async function getAllWarns(
 
     const allWarns = await client.members.findMany({
         where: {
-            guildId: guildId
+            guildId: guildId,
         },
     });
 
@@ -57,7 +57,7 @@ export async function getUserWarns(
         },
     });
 
-    if (!warns || (warns).length < 1) {
+    if (!warns || warns.length < 1) {
         return null;
     }
 
@@ -71,12 +71,31 @@ export async function getUserWarns(
         .setTitle(`Warns given to user ${user.displayName}`)
         .setDescription(`${warns.length} warns found`)
         .setFooter({
-            text: "All times are in UTC"
+            text: "All times are in UTC",
         });
 
     warns.forEach((warn) => {
-        const time =
-            `${(warn.time.getUTCDate() < 10 ? "0" + warn.time.getUTCDate().toString() : warn.time.getUTCDate())}-${(warn.time.getUTCMonth() < 10 ? "0" + warn.time.getUTCMonth().toString() : warn.time.getUTCMonth())}-${warn.time.getUTCFullYear()}\t${(warn.time.getUTCHours() < 10 ? "0" + warn.time.getUTCHours().toString() : warn.time.getUTCHours())}:${(warn.time.getUTCMinutes() < 10 ? "0" + warn.time.getUTCMinutes().toString() : warn.time.getUTCMinutes())}:${(warn.time.getUTCSeconds() < 10 ? "0" + warn.time.getUTCSeconds().toString() : warn.time.getUTCSeconds())}`;
+        const time = `${
+            warn.time.getUTCDate() < 10
+                ? "0" + warn.time.getUTCDate().toString()
+                : warn.time.getUTCDate()
+        }-${
+            warn.time.getUTCMonth() < 10
+                ? "0" + warn.time.getUTCMonth().toString()
+                : warn.time.getUTCMonth()
+        }-${warn.time.getUTCFullYear()}\t${
+            warn.time.getUTCHours() < 10
+                ? "0" + warn.time.getUTCHours().toString()
+                : warn.time.getUTCHours()
+        }:${
+            warn.time.getUTCMinutes() < 10
+                ? "0" + warn.time.getUTCMinutes().toString()
+                : warn.time.getUTCMinutes()
+        }:${
+            warn.time.getUTCSeconds() < 10
+                ? "0" + warn.time.getUTCSeconds().toString()
+                : warn.time.getUTCSeconds()
+        }`;
         embed.addField(time, warn.reason, false);
     });
 

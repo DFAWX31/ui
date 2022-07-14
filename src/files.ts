@@ -5,8 +5,8 @@ const walk = (
     pathLike: fs.PathLike,
     options?:
         | {
-              encoding: BufferEncoding | null;
-          }
+            encoding: BufferEncoding | null;
+        }
         | BufferEncoding
         | null
         | undefined
@@ -17,12 +17,14 @@ const walk = (
         const file = fileList[i];
         const stat = fs.statSync(path.join(pathLike.toString(), file));
 
-        results = [
-            ...results,
-            ...(stat && stat.isDirectory()
-                ? walk(path.join(pathLike.toString(), file))
-                : [path.join(pathLike.toString(), file)]),
-        ];
+        if (!file.toString().startsWith("sub")) {
+            results = [
+                ...results,
+                ...(stat && stat.isDirectory()
+                    ? walk(path.join(pathLike.toString(), file))
+                    : [path.join(pathLike.toString(), file)]),
+            ];
+        }
     }
 
     return results;

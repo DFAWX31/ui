@@ -16,7 +16,10 @@ class Warns extends BotCommand {
                             "The user of whom the warns are to be fetched"
                         )
                 )
-                .toJSON()
+                .toJSON(),
+            {
+                timeout: 5000,
+            }
         );
     }
 

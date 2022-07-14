@@ -23,3 +23,9 @@ model Warns {
   guildId String
   time DateTime @default(now())
 }
+
+model Money {
+  userId String @id
+  balance Int
+  daily Int?
+}

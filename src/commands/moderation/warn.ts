@@ -22,7 +22,10 @@ class Warn extends BotCommand {
                         .setRequired(true)
                 )
                 .setDefaultMemberPermissions(1099511627776)
-                .toJSON()
+                .toJSON(),
+            {
+                timeout: 5000,
+            }
         );
     }
 
