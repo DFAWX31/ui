@@ -10,13 +10,15 @@ class Dice {
 	public async dice(interaction: CommandInteraction) {
 		if (interaction.user.bot) return;
 
-		interaction.deferReply({
+		await interaction.deferReply({
 			ephemeral: true
 		});
 
 		const amount = interaction.options.getInteger("amount");
 
 		if (!amount) return;
+
+		if (amount <= 0) return;
 
 		if (!(await CheckBalance(interaction.user.id, amount))) {
 			return interaction.editReply({

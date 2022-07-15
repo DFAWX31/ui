@@ -3,6 +3,7 @@ import { BotCommand } from "../../../structures";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import subSlots from "./subSlots";
 import subdice from "./subDice";
+import subCoin from "./subCoin";
 
 class Gamble extends BotCommand {
     constructor() {
@@ -32,6 +33,33 @@ class Gamble extends BotCommand {
                                 .setRequired(true)
                         )
                 )
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName("flip")
+                        .setDescription("Flip a coin")
+                        .addIntegerOption((option) =>
+                            option
+                                .setName("amount")
+                                .setDescription("the amount being gambled")
+                                .setRequired(true)
+                        )
+                        .addStringOption((option) =>
+                            option
+                                .setName("selection")
+                                .setDescription("The option being selected")
+                                .addChoices(
+                                    {
+                                        name: "head",
+                                        value: "head"
+                                    },
+                                    {
+                                        name: "tail",
+                                        value: "tail"
+                                    },
+                                )
+                                .setRequired(true)
+                        )
+                )
                 .toJSON(),
             {
                 timeout: 10000,
@@ -46,7 +74,9 @@ class Gamble extends BotCommand {
             await subdice.dice(interaction);
         } else if (interaction.options.getSubcommand() == "slots") {
             await subSlots.slots(interaction);
-        } else return;
+        } else if (interaction.options.getSubcommand() == "flip") {
+            await subCoin.coin(interaction);
+        }
     }
 }
 

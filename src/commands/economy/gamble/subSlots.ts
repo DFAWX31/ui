@@ -13,6 +13,8 @@ class Slots {
 
         if (!amount) return;
 
+        if (amount <= 0) return;
+
         if (!(await CheckBalance(interaction.user.id, amount))) {
             return interaction.editReply({
                 content: "insufficient balance"
