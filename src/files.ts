@@ -5,8 +5,8 @@ const walk = (
     pathLike: fs.PathLike,
     options?:
         | {
-            encoding: BufferEncoding | null;
-        }
+              encoding: BufferEncoding | null;
+          }
         | BufferEncoding
         | null
         | undefined

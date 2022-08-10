@@ -6,7 +6,7 @@ class Slots {
         if (interaction.user.bot) return;
 
         await interaction.deferReply({
-            ephemeral: true
+            ephemeral: true,
         });
 
         const amount = interaction.options.getInteger("amount");
@@ -17,7 +17,7 @@ class Slots {
 
         if (!(await CheckBalance(interaction.user.id, amount))) {
             return interaction.editReply({
-                content: "insufficient balance"
+                content: "insufficient balance",
             });
         }
 
@@ -25,7 +25,7 @@ class Slots {
 
         if (!userInTable) {
             return interaction.editReply({
-                content: "Please use `join` before doing this"
+                content: "Please use `join` before doing this",
             });
         }
 
@@ -94,7 +94,7 @@ class Slots {
             .setColor("RED");
 
         await interaction.editReply({
-            embeds: [embed]
+            embeds: [embed],
         });
 
         embed = new MessageEmbed()
@@ -119,7 +119,7 @@ class Slots {
             .setColor("YELLOW");
 
         await interaction.editReply({
-            embeds: [embed]
+            embeds: [embed],
         });
 
         embed = new MessageEmbed()
@@ -155,8 +155,10 @@ class Slots {
             );
         } else {
             return interaction.channel?.send(
-                `Congratulations!! ${interaction.user
-                }, you've won ${win} for a grand balance of ${userInTable.balance + win
+                `Congratulations!! ${
+                    interaction.user
+                }, you've won ${win} for a grand balance of ${
+                    userInTable.balance + win
                 }`
             );
         }

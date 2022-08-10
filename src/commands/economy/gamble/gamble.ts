@@ -50,12 +50,12 @@ class Gamble extends BotCommand {
                                 .addChoices(
                                     {
                                         name: "head",
-                                        value: "head"
+                                        value: "head",
                                     },
                                     {
                                         name: "tail",
-                                        value: "tail"
-                                    },
+                                        value: "tail",
+                                    }
                                 )
                                 .setRequired(true)
                         )
