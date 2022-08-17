@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { BotCommand } from "../../structures";
 
 class Nick extends BotCommand {
@@ -19,7 +19,7 @@ class Nick extends BotCommand {
         );
     }
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         const newNick = interaction.options.getString("nickname");
 
@@ -34,12 +34,13 @@ class Nick extends BotCommand {
 
             botMember.setNickname(newNick);
         } catch (error) {
-            return interaction.reply(
+            await interaction.reply(
                 "I do not have the permissions to do that!"
             );
+            return;
         }
 
-        interaction.reply("Succesfully changed my nickname");
+        await interaction.reply("Succesfully changed my nickname");
     }
 }
 

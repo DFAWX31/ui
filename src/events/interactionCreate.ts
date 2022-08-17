@@ -1,12 +1,15 @@
-import { Interaction, MessageEmbed } from "discord.js";
-
+import { BaseInteraction, InteractionType, EmbedBuilder } from "discord.js";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "interactionCreate",
-    run: async (client: Bot, interaction: Interaction) => {
-        if (interaction.isCommand() || interaction.isContextMenu()) {
+    run: async (client: Bot, interaction: BaseInteraction) => {
+        if (interaction.type == InteractionType.ApplicationCommand) {
+            if (!interaction.isChatInputCommand()) {
+                return;
+            }
+
             const command = client.commands.get(interaction.commandName);
 
             if (!command) return;
@@ -25,8 +28,8 @@ export default TypedEvent({
 
                 console.error(e);
 
-                const errorEmbed = new MessageEmbed()
-                    .setColor("RED")
+                const errorEmbed = new EmbedBuilder()
+                    .setColor([255, 0, 0])
                     .setDescription("An error occured");
 
                 if (interaction.deferred) {

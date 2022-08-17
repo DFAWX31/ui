@@ -1,4 +1,4 @@
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { BotCommand } from "../../../structures";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import subSlots from "./subSlots";
@@ -68,8 +68,9 @@ class Gamble extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
+        interaction;
         if (interaction.options.getSubcommand() == "dice") {
             await subdice.dice(interaction);
         } else if (interaction.options.getSubcommand() == "slots") {

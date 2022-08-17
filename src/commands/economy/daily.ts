@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { CheckIfExists, UpdateBalance } from "../../database";
 import { BotCommand } from "../../structures";
 
@@ -17,26 +17,26 @@ class Daily extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         const userId = interaction.user.id;
 
         const userDetails = await CheckIfExists(userId);
 
         if (!userDetails) {
-            return interaction.reply({
+            await interaction.reply({
                 content: "Please use `join` before trying to do this",
                 ephemeral: true,
             });
+            return;
         }
 
         const addedValue = 250 + Math.floor(Math.random() * 250);
 
         await UpdateBalance(userId, addedValue);
 
-        interaction.reply(
-            `Congrates You've earned ${addedValue} to make your grand balance ${
-                userDetails.balance + addedValue
+        await interaction.reply(
+            `Congrats You've earned ${addedValue} to make your grand balance ${userDetails.balance + addedValue
             }`
         );
     }

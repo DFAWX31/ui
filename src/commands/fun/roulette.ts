@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction, Message } from "discord.js";
+import { CacheType, ChatInputCommandInteraction, Message } from "discord.js";
 import { BotCommand } from "../../structures";
 
 class Roulette extends BotCommand {
@@ -23,7 +23,7 @@ class Roulette extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         await interaction.deferReply();
 
@@ -61,7 +61,7 @@ class Roulette extends BotCommand {
 
             if (!loser) return;
 
-            interaction.editReply({
+            await interaction.editReply({
                 content: `${loser} died`,
             });
         });

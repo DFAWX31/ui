@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { BotCommand } from "../../structures";
 
 class Ban extends BotCommand {
@@ -21,24 +21,16 @@ class Ban extends BotCommand {
                         .setDescription("The reason the user is getting banned")
                         .setRequired(true)
                 )
-                .addIntegerOption((option) =>
-                    option
-                        .setName("days")
-                        .setDescription(
-                            "The number of days the user is to banned for"
-                        )
-                )
                 .toJSON(),
             { timeout: 5000 }
         );
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         const user = interaction.options.getUser("user");
         const reason = interaction.options.getString("reason");
-        const days = interaction.options.getInteger("days");
 
         if (!user) return;
 
@@ -49,25 +41,20 @@ class Ban extends BotCommand {
         if (!member) return;
 
         try {
-            if (!days) {
-                member?.ban({
-                    reason: reason,
-                });
-            } else {
-                member?.ban({
-                    reason: reason,
-                    days: days,
-                });
-            }
+            member?.ban({
+                reason: reason,
+            });
         } catch (error) {
-            return interaction.reply(
+            await interaction.reply(
                 "I do not have the permissions to do this!"
             );
+            return;
         }
 
-        return interaction.reply(
+        await interaction.reply(
             `${user} was succesfully banned from the server`
         );
+        return;
     }
 }
 

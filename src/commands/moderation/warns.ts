@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { getAllWarns, getUserWarns } from "../../database";
 import { BotCommand } from "../../structures";
 
@@ -24,7 +24,7 @@ class Warns extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         const user = interaction.options.getUser("user");
 
@@ -36,10 +36,11 @@ class Warns extends BotCommand {
             const embed = await getAllWarns(guildId);
 
             if (!embed) {
-                return interaction.reply("No wanrs found in server");
+                interaction.reply("No wanrs found in server");
+                return;
             }
 
-            interaction.reply({
+            await interaction.reply({
                 embeds: [embed],
             });
         } else {
@@ -47,7 +48,7 @@ class Warns extends BotCommand {
 
             if (!embed) return;
 
-            interaction.reply({
+            await interaction.reply({
                 embeds: [embed],
             });
         }

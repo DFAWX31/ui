@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { AddToTable, CheckIfExists } from "../../database";
 
 import { BotCommand } from "../../structures";
@@ -18,7 +18,7 @@ class Join extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         const userId = interaction.user.id;
 
@@ -27,13 +27,14 @@ class Join extends BotCommand {
         if (!userExists) {
             await AddToTable(userId);
         } else {
-            return interaction.reply({
+            await interaction.reply({
                 content: "You have already joined the economy game!!",
                 ephemeral: true,
             });
+            return;
         }
 
-        interaction.reply({
+        await interaction.reply({
             content: `You have succesfully joined the economy game ${interaction.user}`,
             ephemeral: true,
         });

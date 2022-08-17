@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { BotCommand } from "../../structures";
 
 class Kick extends BotCommand {
@@ -27,7 +27,7 @@ class Kick extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         const user = interaction.options.getUser("user");
         const reason = interaction.options.getString("reason");
@@ -43,14 +43,16 @@ class Kick extends BotCommand {
         try {
             member?.kick(reason);
         } catch (error) {
-            return interaction.reply(
+            await interaction.reply(
                 "I do not have the permissions to do this!"
             );
+            return;
         }
 
-        return interaction.reply(
+        await interaction.reply(
             `${user} was succesfully kicked from the server`
         );
+        return;
     }
 }
 

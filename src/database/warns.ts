@@ -1,10 +1,10 @@
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { getClient } from ".";
 import { Bot } from "../structures";
 
 export async function getAllWarns(
     guildId: string
-): Promise<MessageEmbed | null> {
+): Promise<EmbedBuilder | null> {
     const bot = Bot.getInstance();
 
     const client = getClient();
@@ -21,7 +21,7 @@ export async function getAllWarns(
 
     const guild = await bot.guilds.fetch(guildId);
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
         .setTitle(`All warns in the guild ${guild.name}`)
         .setDescription("The top bad boys😎 in the guild are:");
 
@@ -36,7 +36,11 @@ export async function getAllWarns(
             username = user.displayName;
         }
 
-        embed.addField(username, member.numberOfWarns.toString(), false);
+        embed.addFields({
+            name: username,
+            value: member.numberOfWarns.toString(),
+            inline: false,
+        });
     });
 
     return embed;
@@ -45,7 +49,7 @@ export async function getAllWarns(
 export async function getUserWarns(
     guildId: string,
     member: string
-): Promise<MessageEmbed | null> {
+): Promise<EmbedBuilder | null> {
     const bot = Bot.getInstance();
 
     const client = getClient();
@@ -67,7 +71,7 @@ export async function getUserWarns(
 
     if (!guild || !user) return null;
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
         .setTitle(`Warns given to user ${user.displayName}`)
         .setDescription(`${warns.length} warns found`)
         .setFooter({
@@ -96,7 +100,11 @@ export async function getUserWarns(
                 ? "0" + warn.time.getUTCSeconds().toString()
                 : warn.time.getUTCSeconds()
         }`;
-        embed.addField(time, warn.reason, false);
+        embed.addFields({
+            name: time,
+            value: warn.reason,
+            inline: false,
+        });
     });
 
     return embed;

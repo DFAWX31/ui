@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { BotCommand } from "../../structures";
 
 class Rps extends BotCommand {
@@ -35,7 +35,7 @@ class Rps extends BotCommand {
         );
     }
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         if (interaction.user.bot) return;
 
@@ -55,15 +55,15 @@ class Rps extends BotCommand {
         });
 
         if (plays.indexOf(choice) == (res + 1) % plays.length) {
-            interaction.followUp({
+            await interaction.followUp({
                 content: "You won 🏳",
             });
         } else if (plays.indexOf(choice) == res) {
-            interaction.followUp({
+            await interaction.followUp({
                 content: "It's a draw🤝",
             });
         } else {
-            interaction.followUp({
+            await interaction.followUp({
                 content: "I won ✌",
             });
         }

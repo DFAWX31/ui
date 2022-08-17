@@ -40,7 +40,7 @@ export default TypedEvent({
 
         tasks = [];
 
-        const rest = new REST({ version: "9" }).setToken(
+        const rest = new REST({ version: "10" }).setToken(
             process.env.TOKEN || ""
         );
 

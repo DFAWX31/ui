@@ -1,4 +1,4 @@
-import { Client, Collection, Intents } from "discord.js";
+import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
 import { eventFiles } from "../files";
 import { IBotEvent } from "../types";
 
@@ -12,14 +12,14 @@ export default class Bot extends Client<true> {
     constructor() {
         super({
             intents: [
-                Intents.FLAGS.GUILDS,
-                Intents.FLAGS.GUILD_MEMBERS,
-                Intents.FLAGS.GUILD_MESSAGES,
-                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-                Intents.FLAGS.DIRECT_MESSAGES,
-                Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMembers,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.GuildMessageReactions,
+                GatewayIntentBits.DirectMessages,
+                GatewayIntentBits.DirectMessageReactions,
             ],
-            partials: ["MESSAGE", "CHANNEL", "REACTION"],
+            partials: [Partials.Message, Partials.Message, Partials.Reaction],
         });
         Bot.instance = this;
     }

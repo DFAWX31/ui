@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { CheckIfExists } from "../../database";
 import { BotCommand } from "../../structures";
 
@@ -24,7 +24,7 @@ class Balance extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         if (interaction.user.bot) return;
 
@@ -34,24 +34,28 @@ class Balance extends BotCommand {
             const userInfo = await CheckIfExists(interaction.user.id);
 
             if (!userInfo) {
-                return interaction.reply({
+                await interaction.reply({
                     content: "please use `join` before doing this",
                     ephemeral: true,
                 });
+                return;
             }
 
-            interaction.reply(`Your current balance is ${userInfo?.balance}`);
+            await interaction.reply(
+                `Your current balance is ${userInfo?.balance}`
+            );
         } else {
             const userInfo = await CheckIfExists(user.id);
 
             if (!userInfo) {
-                return interaction.reply({
+                await interaction.reply({
                     content: `${user.tag} not found in database, please ask them to join the game using \`join\``,
                     ephemeral: true,
                 });
+                return;
             }
 
-            interaction.reply(
+            await interaction.reply(
                 `The user's current balance is ${userInfo.balance}`
             );
         }

@@ -1,8 +1,10 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import { CheckBalance, CheckIfExists, UpdateBalance } from "../../../database";
 
 class Slots {
-    public async slots(interaction: CommandInteraction) {
+    public async slots(
+        interaction: ChatInputCommandInteraction
+    ): Promise<void> {
         if (interaction.user.bot) return;
 
         await interaction.deferReply({
@@ -16,17 +18,19 @@ class Slots {
         if (amount <= 0) return;
 
         if (!(await CheckBalance(interaction.user.id, amount))) {
-            return interaction.editReply({
+            await interaction.editReply({
                 content: "insufficient balance",
             });
+            return;
         }
 
         const userInTable = await CheckIfExists(interaction.user.id);
 
         if (!userInTable) {
-            return interaction.editReply({
+            await interaction.editReply({
                 content: "Please use `join` before doing this",
             });
+            return;
         }
 
         if (interaction.options.getSubcommand() != "slots") return;
@@ -72,7 +76,7 @@ class Slots {
             win -= amount;
         }
 
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
             .setTitle("slot results")
             .addFields(
                 {
@@ -91,13 +95,13 @@ class Slots {
                     inline: false,
                 }
             )
-            .setColor("RED");
+            .setColor([255, 0, 0]);
 
         await interaction.editReply({
             embeds: [embed],
         });
 
-        embed = new MessageEmbed()
+        embed = new EmbedBuilder()
             .setTitle("slot results")
             .addFields(
                 {
@@ -116,13 +120,13 @@ class Slots {
                     inline: false,
                 }
             )
-            .setColor("YELLOW");
+            .setColor([255, 255, 0]);
 
         await interaction.editReply({
             embeds: [embed],
         });
 
-        embed = new MessageEmbed()
+        embed = new EmbedBuilder()
             .setTitle("slot results")
             .addFields(
                 {
@@ -141,26 +145,28 @@ class Slots {
                     inline: false,
                 }
             )
-            .setColor("AQUA");
+            .setColor([0, 255, 255]);
 
-        interaction.editReply({
+        await interaction.editReply({
             embeds: [embed],
         });
 
         await UpdateBalance(interaction.user.id, win);
 
         if (win < 0) {
-            return interaction.channel?.send(
+            await interaction.channel?.send(
                 "unfortunately you've lost this round"
             );
+            return;
         } else {
-            return interaction.channel?.send(
+            await interaction.channel?.send(
                 `Congratulations!! ${
                     interaction.user
                 }, you've won ${win} for a grand balance of ${
                     userInTable.balance + win
                 }`
             );
+            return;
         }
     }
 }

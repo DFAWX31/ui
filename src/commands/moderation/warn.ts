@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { warnUser } from "../../database";
 import { BotCommand } from "../../structures";
 
@@ -30,7 +30,7 @@ class Warn extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         const user = interaction.options.getUser("user");
         const reason = interaction.options.getString("reason");
@@ -43,7 +43,9 @@ class Warn extends BotCommand {
 
         await warnUser(user.id, guildId, reason);
 
-        interaction.reply(`The user ${user} has been warned for ${reason}`);
+        await interaction.reply(
+            `The user ${user} has been warned for ${reason}`
+        );
     }
 }
 

@@ -1,13 +1,15 @@
 import {
-    CommandInteraction,
-    MessageActionRow,
-    MessageSelectMenu,
+    ChatInputCommandInteraction,
+    ActionRowBuilder,
+    SelectMenuBuilder,
     SelectMenuInteraction,
+    MessageComponentInteraction,
+    ComponentType,
 } from "discord.js";
 import { CheckBalance, CheckIfExists, UpdateBalance } from "../../../database";
 
 class Dice {
-    public async dice(interaction: CommandInteraction) {
+    public async dice(interaction: ChatInputCommandInteraction): Promise<void> {
         if (interaction.user.bot) return;
 
         await interaction.deferReply({
@@ -21,23 +23,25 @@ class Dice {
         if (amount <= 0) return;
 
         if (!(await CheckBalance(interaction.user.id, amount))) {
-            return interaction.editReply({
+            await interaction.editReply({
                 content: "Insufficient balance",
             });
+            return;
         }
 
         const userInTable = await CheckIfExists(interaction.user.id);
 
         if (!userInTable) {
-            return interaction.editReply({
+            await interaction.editReply({
                 content: "Please use `join` before doing this",
             });
+            return;
         }
 
         if (interaction.options.getSubcommand() != "dice") return;
 
-        const row = new MessageActionRow().addComponents(
-            new MessageSelectMenu()
+        const row = new ActionRowBuilder<SelectMenuBuilder>().addComponents([
+            new SelectMenuBuilder()
                 .setCustomId("dice")
                 .setMinValues(1)
                 .setMaxValues(5)
@@ -72,15 +76,15 @@ class Dice {
                         description: "1️⃣",
                         value: "one",
                     },
-                ])
-        );
+                ]),
+        ]);
 
         const message = await interaction.channel?.send({
             content: "Make your selection",
             components: [row],
         });
 
-        const filter = (i: SelectMenuInteraction) => {
+        const filter = (i: MessageComponentInteraction) => {
             i.deferUpdate();
             return i.user.id === interaction.user.id;
         };
@@ -90,7 +94,7 @@ class Dice {
         message
             .awaitMessageComponent({
                 filter: filter,
-                componentType: "SELECT_MENU",
+                componentType: ComponentType.SelectMenu,
                 time: 30000,
             })
             .then(async (select: SelectMenuInteraction) => {
@@ -135,18 +139,15 @@ class Dice {
 
                 if (win <= 0) {
                     message.edit({
-                        content: `${
-                            interaction.user
-                        } lost ${amount} coins😖, balance is ${
-                            userInTable.balance - amount
-                        }`,
+                        content: `${interaction.user
+                            } lost ${amount} coins😖, balance is ${userInTable.balance - amount
+                            }`,
                         components: [],
                     });
                 } else {
                     message.edit({
-                        content: `You've won ${win} coins, ${
-                            interaction.user
-                        }, your new balance is ${userInTable.balance + win}`,
+                        content: `You've won ${win} coins, ${interaction.user
+                            }, your new balance is ${userInTable.balance + win}`,
                         components: [],
                     });
                 }

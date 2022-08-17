@@ -1,8 +1,8 @@
-import { CommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction } from "discord.js";
 import { UpdateBalance } from "../../../database";
 
 class Coin {
-    public async coin(interaction: CommandInteraction) {
+    public async coin(interaction: ChatInputCommandInteraction): Promise<void> {
         if (interaction.user.bot) return;
 
         await interaction.deferReply({
@@ -20,7 +20,7 @@ class Coin {
 
         const options = ["head", "tail"];
 
-        interaction.editReply({
+        await interaction.editReply({
             content: `The coin landed on ${options[res]}`,
         });
 
@@ -33,10 +33,11 @@ class Coin {
         await UpdateBalance(interaction.user.id, win);
 
         if (win < 0) {
-            return interaction.followUp(`You've lost ${amount} coins`);
+            await interaction.followUp(`You've lost ${amount} coins`);
+            return;
         }
 
-        interaction.followUp(`You've won ${win - amount} coins`);
+        await interaction.followUp(`You've won ${win - amount} coins`);
     }
 }
 

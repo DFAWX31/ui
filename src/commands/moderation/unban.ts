@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CacheType, CommandInteraction } from "discord.js";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
 import { BotCommand } from "../../structures";
 
 class Unban extends BotCommand {
@@ -23,21 +23,22 @@ class Unban extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<CacheType>
+        interaction: ChatInputCommandInteraction<CacheType>
     ): Promise<void> {
         const userId = interaction.options.getString("user-id");
 
         if (!userId) return;
 
         try {
-            interaction.guild?.members.unban(userId);
+            await interaction.guild?.members.unban(userId);
         } catch (error) {
-            return interaction.reply(
+            await interaction.reply(
                 "I do not have the permissions to do that!"
             );
+            return;
         }
 
-        interaction.reply("The user has been succesfully unbanned");
+        await interaction.reply("The user has been succesfully unbanned");
     }
 }
 
